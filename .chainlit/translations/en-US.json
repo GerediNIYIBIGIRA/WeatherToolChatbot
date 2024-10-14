@@ -1,0 +1,229 @@
+{
+***REMOVED***"components": {
+***REMOVED***"atoms": {
+***REMOVED***"buttons": {
+***REMOVED***"userButton": {
+***REMOVED***"menu": {
+***REMOVED***"settings": "Settings",
+***REMOVED***"settingsKey": "S",
+***REMOVED***"APIKeys": "API Keys",
+***REMOVED***"logout": "Logout"
+***REMOVED***
+***REMOVED***
+***REMOVED***
+***REMOVED***,
+***REMOVED***"molecules": {
+***REMOVED***"newChatButton": {
+***REMOVED***"newChat": "New Chat"
+***REMOVED***
+***REMOVED***"tasklist": {
+***REMOVED***"TaskList": {
+***REMOVED***"title": "\ud83d\uddd2\ufe0f Task List",
+***REMOVED***"loading": "Loading...",
+***REMOVED***"error": "An error occurred"
+***REMOVED***
+***REMOVED***
+***REMOVED***"attachments": {
+***REMOVED***"cancelUpload": "Cancel upload",
+***REMOVED***"removeAttachment": "Remove attachment"
+***REMOVED***
+***REMOVED***"newChatDialog": {
+***REMOVED***"createNewChat": "Create new chat?",
+***REMOVED***"clearChat": "This will clear the current messages and start a new chat.",
+***REMOVED***"cancel": "Cancel",
+***REMOVED***"confirm": "Confirm"
+***REMOVED***
+***REMOVED***"settingsModal": {
+***REMOVED***"settings": "Settings",
+***REMOVED***"expandMessages": "Expand Messages",
+***REMOVED***"hideChainOfThought": "Hide Chain of Thought",
+***REMOVED***"darkMode": "Dark Mode"
+***REMOVED***
+***REMOVED***"detailsButton": {
+***REMOVED***"using": "Using",
+***REMOVED***"used": "Used"
+***REMOVED***
+***REMOVED***"auth": {
+***REMOVED***"authLogin": {
+***REMOVED***"title": "Login to access the app.",
+***REMOVED***"form": {
+***REMOVED***"email": "Email address",
+***REMOVED***"password": "Password",
+***REMOVED***"noAccount": "Don't have an account?",
+***REMOVED***"alreadyHaveAccount": "Already have an account?",
+***REMOVED***"signup": "Sign Up",
+***REMOVED***"signin": "Sign In",
+***REMOVED***"or": "OR",
+***REMOVED***"continue": "Continue",
+***REMOVED***"forgotPassword": "Forgot password?",
+***REMOVED***"passwordMustContain": "Your password must contain:",
+***REMOVED***"emailRequired": "email is a required field",
+***REMOVED***"passwordRequired": "password is a required field"
+***REMOVED***,
+***REMOVED***"error": {
+***REMOVED***"default": "Unable to sign in.",
+***REMOVED***"signin": "Try signing in with a different account.",
+***REMOVED***"oauthsignin": "Try signing in with a different account.",
+***REMOVED***"redirect_uri_mismatch": "The redirect URI is not matching the oauth app configuration.",
+***REMOVED***"oauthcallbackerror": "Try signing in with a different account.",
+***REMOVED***"oauthcreateaccount": "Try signing in with a different account.",
+***REMOVED***"emailcreateaccount": "Try signing in with a different account.",
+***REMOVED***"callback": "Try signing in with a different account.",
+***REMOVED***"oauthaccountnotlinked": "To confirm your identity, sign in with the same account you used originally.",
+***REMOVED***"emailsignin": "The e-mail could not be sent.",
+***REMOVED***"emailverify": "Please verify your email, a new email has been sent.",
+***REMOVED***"credentialssignin": "Sign in failed. Check the details you provided are correct.",
+***REMOVED***"sessionrequired": "Please sign in to access this page."
+***REMOVED***
+***REMOVED***
+***REMOVED***"authVerifyEmail": {
+***REMOVED***"almostThere": "You're almost there! We've sent an email to ",
+***REMOVED***"verifyEmailLink": "Please click on the link in that email to complete your signup.",
+***REMOVED***"didNotReceive": "Can't find the email?",
+***REMOVED***"resendEmail": "Resend email",
+***REMOVED***"goBack": "Go Back",
+***REMOVED***"emailSent": "Email sent successfully.",
+***REMOVED***"verifyEmail": "Verify your email address"
+***REMOVED***
+***REMOVED***"providerButton": {
+***REMOVED***"continue": "Continue with {{provider***REMOVED******REMOVED***",
+***REMOVED***"signup": "Sign up with {{provider***REMOVED******REMOVED***"
+***REMOVED***
+***REMOVED***"authResetPassword": {
+***REMOVED***"newPasswordRequired": "New password is a required field",
+***REMOVED***"passwordsMustMatch": "Passwords must match",
+***REMOVED***"confirmPasswordRequired": "Confirm password is a required field",
+***REMOVED***"newPassword": "New password",
+***REMOVED***"confirmPassword": "Confirm password",
+***REMOVED***"resetPassword": "Reset Password"
+***REMOVED***
+***REMOVED***"authForgotPassword": {
+***REMOVED***"email": "Email address",
+***REMOVED***"emailRequired": "email is a required field",
+***REMOVED***"emailSent": "Please check the email address {{email***REMOVED******REMOVED*** for instructions to reset your password.",
+***REMOVED***"enterEmail": "Enter your email address and we will send you instructions to reset your password.",
+***REMOVED***"resendEmail": "Resend email",
+***REMOVED***"continue": "Continue",
+***REMOVED***"goBack": "Go Back"
+***REMOVED***
+***REMOVED***
+***REMOVED***,
+***REMOVED***"organisms": {
+***REMOVED***"chat": {
+***REMOVED***"history": {
+***REMOVED***"index": {
+***REMOVED***"showHistory": "Show history",
+***REMOVED***"lastInputs": "Last Inputs",
+***REMOVED***"noInputs": "Such empty...",
+***REMOVED***"loading": "Loading..."
+***REMOVED***
+***REMOVED***
+***REMOVED***"inputBox": {
+***REMOVED***"input": {
+***REMOVED***"placeholder": "Type your message here..."
+***REMOVED***,
+***REMOVED***"speechButton": {
+***REMOVED***"start": "Start recording",
+***REMOVED***"stop": "Stop recording"
+***REMOVED***,
+***REMOVED***"SubmitButton": {
+***REMOVED***"sendMessage": "Send message",
+***REMOVED***"stopTask": "Stop Task"
+***REMOVED***,
+***REMOVED***"UploadButton": {
+***REMOVED***"attachFiles": "Attach files"
+***REMOVED***,
+***REMOVED***"waterMark": {
+***REMOVED***"text": "Built with"
+***REMOVED***
+***REMOVED***
+***REMOVED***"Messages": {
+***REMOVED***"index": {
+***REMOVED***"running": "Running",
+***REMOVED***"executedSuccessfully": "executed successfully",
+***REMOVED***"failed": "failed",
+***REMOVED***"feedbackUpdated": "Feedback updated",
+***REMOVED***"updating": "Updating"
+***REMOVED***
+***REMOVED***
+***REMOVED***"dropScreen": {
+***REMOVED***"dropYourFilesHere": "Drop your files here"
+***REMOVED***
+***REMOVED***"index": {
+***REMOVED***"failedToUpload": "Failed to upload",
+***REMOVED***"cancelledUploadOf": "Cancelled upload of",
+***REMOVED***"couldNotReachServer": "Could not reach the server",
+***REMOVED***"continuingChat": "Continuing previous chat"
+***REMOVED***
+***REMOVED***"settings": {
+***REMOVED***"settingsPanel": "Settings panel",
+***REMOVED***"reset": "Reset",
+***REMOVED***"cancel": "Cancel",
+***REMOVED***"confirm": "Confirm"
+***REMOVED***
+***REMOVED***
+***REMOVED***"threadHistory": {
+***REMOVED***"sidebar": {
+***REMOVED***"filters": {
+***REMOVED***"FeedbackSelect": {
+***REMOVED***"feedbackAll": "Feedback: All",
+***REMOVED***"feedbackPositive": "Feedback: Positive",
+***REMOVED***"feedbackNegative": "Feedback: Negative"
+***REMOVED***,
+***REMOVED***"SearchBar": {
+***REMOVED***"search": "Search"
+***REMOVED***
+***REMOVED***,
+***REMOVED***"DeleteThreadButton": {
+***REMOVED***"confirmMessage": "This will delete the thread as well as it's messages and elements.",
+***REMOVED***"cancel": "Cancel",
+***REMOVED***"confirm": "Confirm",
+***REMOVED***"deletingChat": "Deleting chat",
+***REMOVED***"chatDeleted": "Chat deleted"
+***REMOVED***,
+***REMOVED***"index": {
+***REMOVED***"pastChats": "Past Chats"
+***REMOVED***,
+***REMOVED***"ThreadList": {
+***REMOVED***"empty": "Empty...",
+***REMOVED***"today": "Today",
+***REMOVED***"yesterday": "Yesterday",
+***REMOVED***"previous7days": "Previous 7 days",
+***REMOVED***"previous30days": "Previous 30 days"
+***REMOVED***,
+***REMOVED***"TriggerButton": {
+***REMOVED***"closeSidebar": "Close sidebar",
+***REMOVED***"openSidebar": "Open sidebar"
+***REMOVED***
+***REMOVED***
+***REMOVED***"Thread": {
+***REMOVED***"backToChat": "Go back to chat",
+***REMOVED***"chatCreatedOn": "This chat was created on"
+***REMOVED***
+***REMOVED***
+***REMOVED***"header": {
+***REMOVED***"chat": "Chat",
+***REMOVED***"readme": "Readme"
+***REMOVED***
+***REMOVED***
+***REMOVED***,
+***REMOVED***"hooks": {
+***REMOVED***"useLLMProviders": {
+***REMOVED***"failedToFetchProviders": "Failed to fetch providers:"
+***REMOVED***
+***REMOVED***,
+***REMOVED***"pages": {
+***REMOVED***"Design": {***REMOVED***,
+***REMOVED***"Env": {
+***REMOVED***"savedSuccessfully": "Saved successfully",
+***REMOVED***"requiredApiKeys": "Required API Keys",
+***REMOVED***"requiredApiKeysInfo": "To use this app, the following API keys are required. The keys are stored on your device's local storage."
+***REMOVED***,
+***REMOVED***"Page": {
+***REMOVED***"notPartOfProject": "You are not part of this project."
+***REMOVED***,
+***REMOVED***"ResumeButton": {
+***REMOVED***"resumeChat": "Resume Chat"
+***REMOVED***
+***REMOVED***
+***REMOVED***

@@ -1,0 +1,121 @@
+[project***REMOVED***
+# Whether to enable telemetry (default: true***REMOVED***. No personal data is collected.
+enable_telemetry = true
+
+
+# List of environment variables to be provided by each user to use the app.
+user_env = [***REMOVED***
+
+# Duration (in seconds***REMOVED*** during which the session is saved when the connection is lost
+session_timeout = 3600
+
+# Enable third parties caching (e.g LangChain cache***REMOVED***
+cache = false
+
+# Authorized origins
+allow_origins = ["*"***REMOVED***
+
+# Follow symlink for asset mount (see https://github.com/Chainlit/chainlit/issues/317***REMOVED***
+# follow_symlink = false
+
+[features***REMOVED***
+# Process and display HTML in messages. This can be a security risk (see https://stackoverflow.com/questions/19603097/why-is-it-dangerous-to-render-user-generated-html-or-javascript***REMOVED***
+unsafe_allow_html = false
+
+# Process and display mathematical expressions. This can clash with "$" characters in messages.
+latex = false
+
+# Automatically tag threads with the current chat profile (if a chat profile is used***REMOVED***
+auto_tag_thread = true
+
+# Allow users to edit their own messages
+edit_message = true
+
+# Authorize users to spontaneously upload files with messages
+[features.spontaneous_file_upload***REMOVED***
+***REMOVED***enabled = true
+***REMOVED***accept = ["*/*"***REMOVED***
+***REMOVED***max_files = 20
+***REMOVED***max_size_mb = 500
+
+[features.audio***REMOVED***
+***REMOVED***# Threshold for audio recording
+***REMOVED***min_decibels = -45
+***REMOVED***# Delay for the user to start speaking in MS
+***REMOVED***initial_silence_timeout = 3000
+***REMOVED***# Delay for the user to continue speaking in MS. If the user stops speaking for this duration, the recording will stop.
+***REMOVED***silence_timeout = 1500
+***REMOVED***# Above this duration (MS***REMOVED*** the recording will forcefully stop.
+***REMOVED***max_duration = 15000
+***REMOVED***# Duration of the audio chunks in MS
+***REMOVED***chunk_duration = 1000
+***REMOVED***# Sample rate of the audio
+***REMOVED***sample_rate = 44100
+
+[UI***REMOVED***
+# Name of the assistant.
+name = "Assistant"
+
+# Description of the assistant. This is used for HTML tags.
+# description = ""
+
+# Large size content are by default collapsed for a cleaner ui
+default_collapse_content = true
+
+# Chain of Thought (CoT***REMOVED*** display mode. Can be "hidden", "tool_call" or "full".
+cot = "full"
+
+# Link to your github repo. This will add a github button in the UI's header.
+# github = ""
+
+# Specify a CSS file that can be used to customize the user interface.
+# The CSS file can be served from the public directory or via an external link.
+# custom_css = "/public/test.css"
+
+# Specify a Javascript file that can be used to customize the user interface.
+# The Javascript file can be served from the public directory.
+# custom_js = "/public/test.js"
+
+# Specify a custom font url.
+# custom_font = "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap"
+
+# Specify a custom meta image url.
+# custom_meta_image_url = "https://chainlit-cloud.s3.eu-west-3.amazonaws.com/logo/chainlit_banner.png"
+
+# Specify a custom build directory for the frontend.
+# This can be used to customize the frontend code.
+# Be careful: If this is a relative path, it should not start with a slash.
+# custom_build = "./public/build"
+
+[UI.theme***REMOVED***
+***REMOVED***default = "dark"
+***REMOVED***#layout = "wide"
+***REMOVED***#font_family = "Inter, sans-serif"
+# Override default MUI light theme. (Check theme.ts***REMOVED***
+[UI.theme.light***REMOVED***
+***REMOVED***#background = "#FAFAFA"
+***REMOVED***#paper = "#FFFFFF"
+
+***REMOVED***[UI.theme.light.primary***REMOVED***
+***REMOVED***#main = "#F80061"
+***REMOVED***#dark = "#980039"
+***REMOVED***#light = "#FFE7EB"
+***REMOVED***[UI.theme.light.text***REMOVED***
+***REMOVED***#primary = "#212121"
+***REMOVED***#secondary = "#616161"
+
+# Override default MUI dark theme. (Check theme.ts***REMOVED***
+[UI.theme.dark***REMOVED***
+***REMOVED***#background = "#FAFAFA"
+***REMOVED***#paper = "#FFFFFF"
+
+***REMOVED***[UI.theme.dark.primary***REMOVED***
+***REMOVED***#main = "#F80061"
+***REMOVED***#dark = "#980039"
+***REMOVED***#light = "#FFE7EB"
+***REMOVED***[UI.theme.dark.text***REMOVED***
+***REMOVED***#primary = "#EEEEEE"
+***REMOVED***#secondary = "#BDBDBD"
+
+[meta***REMOVED***
+generated_by = "1.2.0"
