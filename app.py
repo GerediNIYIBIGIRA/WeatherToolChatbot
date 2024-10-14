@@ -527,9 +527,9 @@
 import os
 import chainlit as cl
 from dotenv import load_dotenv
-from langchain_openai import OpenAI, ChatOpenAI
+from flask import Flask
+from langchain_openai import ChatOpenAI
 from langchain.prompts import ChatPromptTemplate, MessagesPlaceholder
-from langchain.memory.buffer import ConversationBufferMemory
 from langchain.agents.output_parsers.openai_tools import OpenAIToolsAgentOutputParser
 from langchain.agents import AgentExecutor
 from langchain.agents.format_scratchpad.openai_tools import format_to_openai_tool_messages
@@ -539,6 +539,9 @@ from pyowm import OWM
 
 # Load environment variables
 load_dotenv()
+
+# Initialize the Flask app
+app = Flask(__name__)
 
 # Global variables
 chat_history = []
@@ -628,5 +631,12 @@ async def handle_message(message: cl.Message):
         await fn.acall()
         await cl.Message(content="Weather information has been added to the form.").send()
 
+# Flask route for health check
+@app.route('/')
+def health_check():
+    return "The app is running!"
+
 if __name__ == "__main__":
-    cl.run(host='0.0.0.0', port=int(os.environ.get("PORT", 10000)))
+    # Use 'gunicorn' to run the Flask app
+    app.run(host='0.0.0.0', port=int(os.environ.get("PORT", 10000)))  # Default to 10000 for local development
+
