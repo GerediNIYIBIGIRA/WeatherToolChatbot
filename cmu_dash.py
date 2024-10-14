@@ -1,80 +1,80 @@
 
-***REMOVED***
-***REMOVED***
-***REMOVED***
+from dash import Dash, html, dcc, ctx
+from dash import Dash, dcc, html, Input, Output, State
+from dash import Dash, dash_table
 
-***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED***
+tabs_styles = {
+    'height': '44px'
+}
+tab_style = {
+    'borderBottom': '1px solid #d6d6d6',
+    'padding': '6px',
+    'fontWeight': 'bold',
+    'width': '600px',
+    'font-size':20
+}
 
-***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED***
+tab_selected_style = {
+    'borderTop': '1px solid #d6d6d6',
+    'borderBottom': '1px solid #d6d6d6',
+    'backgroundColor': '#119DFF',
+    'color': 'white',
+    'padding': '6px',
+    'width': '600px',
+    'font-size':20
+}
 
-col_style = {'display':'grid', 'grid-auto-flow': 'row', 'font-size':20, 'margin-top':'20px', 'width':'90px'***REMOVED***
-row_style = {'display':'grid', 'grid-auto-flow': 'column', 'font-size':20***REMOVED***
+col_style = {'display':'grid', 'grid-auto-flow': 'row', 'font-size':20, 'margin-top':'20px', 'width':'90px'}
+row_style = {'display':'grid', 'grid-auto-flow': 'column', 'font-size':20}
 
-***REMOVED***
-***REMOVED***
-***REMOVED***
+import plotly.express as px
+import pandas as pd
+import requests
 
-***REMOVED***
+df = []
 
-***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED***
+# external JavaScript files
+external_scripts = [
+    'http://localhost:8000/copilot/index.js'
+]
 
-***REMOVED***
+app = Dash(__name__, external_scripts=external_scripts)
 
-***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED***
+app.layout = html.Div(children=[
+    html.H1(children='Weather Infromation Generator'),
+    dcc.Tabs([
+        dcc.Tab(label="Input form", style=tab_style, selected_style=tab_selected_style, children=[
 
-***REMOVED***html.H2(children='Weather Information Form', style={'font-family': 'sans-serif'***REMOVED******REMOVED***
+            html.H2(children='Weather Information Form', style={'font-family': 'sans-serif'}),
 
-***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED***html.Label(['Country Name'***REMOVED***, style={'font-family': 'sans-serif'***REMOVED******REMOVED***
-***REMOVED***html.Div(dcc.Input(id='fieldA', type='text', style={"font-family": 'sans-serif', 'font-size': 20***REMOVED******REMOVED***
-***REMOVED******REMOVED***, style=col_style***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED***html.Label(['City Name'***REMOVED***, style={'font-family': 'sans-serif'***REMOVED******REMOVED***
-***REMOVED***html.Div(dcc.Input(id='fieldB', type='text', style={"font-family": 'sans-serif', 'font-size': 20***REMOVED******REMOVED***
-***REMOVED******REMOVED***, style=col_style***REMOVED***
+            # fields for course add/drop
+            html.Div([
+                html.Div([
+                    html.Label(['Country Name'], style={'font-family': 'sans-serif'}),
+                    html.Div(dcc.Input(id='fieldA', type='text', style={"font-family": 'sans-serif', 'font-size': 20}))
+                ], style=col_style),
+                                   
+                html.Div([
+                    html.Label(['City Name'], style={'font-family': 'sans-serif'}),
+                    html.Div(dcc.Input(id='fieldB', type='text', style={"font-family": 'sans-serif', 'font-size': 20}))
+                ], style=col_style),
 
-***REMOVED***
-***REMOVED***html.Label(['Weather Information Results'***REMOVED***, style={'font-family': 'sans-serif'***REMOVED******REMOVED***
-***REMOVED***html.Div(dcc.Input(id='fieldC', type='text', style={"font-family": 'sans-serif', 'font-size': 20***REMOVED******REMOVED***
-***REMOVED******REMOVED***, style=col_style***REMOVED***
+                html.Div([
+                    html.Label(['Weather Information Results'], style={'font-family': 'sans-serif'}),
+                    html.Div(dcc.Input(id='fieldC', type='text', style={"font-family": 'sans-serif', 'font-size': 20}))
+                ], style=col_style),
 
-***REMOVED***
-***REMOVED***html.Button('Submit', id='add-val', style={"width":"90px", "height":"30px", "font-family": 'sans-serif', 'font-size': 20***REMOVED******REMOVED***
-***REMOVED***
-***REMOVED******REMOVED***, style=col_style***REMOVED***
+                html.Div([
+                    html.Button('Submit', id='add-val', style={"width":"90px", "height":"30px", "font-family": 'sans-serif', 'font-size': 20}),
+                    html.Div(id='submit-response', children='Click to submit')
+                ], style=col_style)
 
-***REMOVED******REMOVED***, style=col_style***REMOVED***
+            ], style=col_style)
 
-***REMOVED***
-***REMOVED***
-***REMOVED***
+        ])
+    ])
+])
 
-***REMOVED***
-***REMOVED***
+if __name__ == '__main__':
+    app.run_server(debug=False)
 
