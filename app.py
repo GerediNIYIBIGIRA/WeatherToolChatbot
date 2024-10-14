@@ -524,7 +524,9 @@
 #     port = int(os.environ.get("PORT", 10000))
 #     app.run(host='0.0.0.0', port=port)
 
-from flask import Flask
+import os
+import chainlit as cl
+from dotenv import load_dotenv
 from langchain_openai import OpenAI, ChatOpenAI
 from langchain.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain.memory.buffer import ConversationBufferMemory
@@ -534,30 +536,18 @@ from langchain.agents.format_scratchpad.openai_tools import format_to_openai_too
 from langchain_core.messages import AIMessage, HumanMessage
 from langchain_core.tools import tool
 from pyowm import OWM
-from dotenv import load_dotenv
-import os
-import chainlit as cl
-import threading  # For running Chainlit in parallel
 
 # Load environment variables
 load_dotenv()
 
-# Initialize the Flask app
-app = Flask(__name__)
-
-# Flask root route for health checks
-@app.route('/')
-def home():
-    return "Chainlit app is running. Please use the Chainlit interface."
-
-# Global variables for weather info
+# Global variables
 chat_history = []
 country_name = None
 city_name = None
 results = None
 results_obtained = False
 
-# Weather tool definition
+# Weather tool
 @tool("WeatherTool", return_direct=False)
 def WeatherTool(country: str = None, city: str = None) -> str:
     global country_name, city_name, results, results_obtained
@@ -638,13 +628,5 @@ async def handle_message(message: cl.Message):
         await fn.acall()
         await cl.Message(content="Weather information has been added to the form.").send()
 
-# Function to run Chainlit in a separate thread
-def run_chainlit():
-    cl.run(host='0.0.0.0', port=int(os.environ.get("PORT", 10000)))
-
-# Start Chainlit in a separate thread
-chainlit_thread = threading.Thread(target=run_chainlit)
-chainlit_thread.start()
-
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=int(os.environ.get("PORT", 5000)))  # Flask runs on a different port
+    cl.run(host='0.0.0.0', port=int(os.environ.get("PORT", 10000)))
