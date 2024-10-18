@@ -560,21 +560,26 @@ for message in st.session_state.chat_history:
     elif isinstance(message, AIMessage):
         st.markdown(f"<div class='ai-message'><strong>Geredi AI:</strong> {message.content}</div>", unsafe_allow_html=True)
 
-# Streamlit input for user message
-user_input = st.text_input("Welcome to Geredi AI! I'm here to assist you with any questions or information related to malaria and weather:", "")
+# Streamlit input for user message with key for clearing input after sending
+user_input_key = 'user_input'
+user_input_placeholder = st.empty()
+user_input_placeholder.text_input("Welcome to Geredi AI! I'm here to assist you with any questions or information related to malaria and weather:", key=user_input_key)
 
 if st.button("Send"):
-    if user_input:
+    user_input_value = st.session_state[user_input_key]
+    
+    if user_input_value:
+        
         agent_executor = st.session_state.agent_executor
 
-        result = agent_executor.invoke({"input": user_input, "chat_history": st.session_state.chat_history})
+        result = agent_executor.invoke({"input": user_input_value, "chat_history": st.session_state.chat_history})
 
         # Update chat history
-        st.session_state.chat_history.append(HumanMessage(content=user_input))
+        st.session_state.chat_history.append(HumanMessage(content=user_input_value))
         st.session_state.chat_history.append(AIMessage(content=result["output"]))
 
-        # Clear input after sending by rerunning script (clears text input field)
-        st.experimental_rerun()
+       # Clear input field by setting its value in session state directly 
+       st.session_state[user_input_key] = ""
         
 st.markdown("</div>", unsafe_allow_html=True)
 
