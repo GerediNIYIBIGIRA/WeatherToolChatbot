@@ -187,7 +187,7 @@ st.markdown("""
         font-weight: bold;
     }
     .chat-container {
-        background-color: white;
+        background-color: blue;
         border-radius: 10px;
         padding: 20px;
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
