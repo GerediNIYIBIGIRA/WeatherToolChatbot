@@ -538,7 +538,7 @@ TAVILY_API_KEY = os.getenv("TAVILY_API_KEY")
 OWM_API_KEY = os.getenv("OWM_API_KEY")
 
 # Streamlit page configuration
-st.set_page_config(page_title="Malaria and Weather Tool Assistant", page_icon="🦟", layout="wide")
+st.set_page_config(page_title="Geredi AI Malaria and Weather Tool Assistant", page_icon="🦟", layout="wide")
 
 # Custom CSS for styling to match the logo's aesthetic
 st.markdown("""
@@ -597,7 +597,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # Streamlit app title
-st.markdown("<h1 class='main-header'>Malaria Prompt Answering Assistant</h1>", unsafe_allow_html=True)
+st.markdown("<h1 class='main-header'>Malaria and Weather Tool Assistant</h1>", unsafe_allow_html=True)
 
 # Load documents from GitHub
 loader = GithubFileLoader(
