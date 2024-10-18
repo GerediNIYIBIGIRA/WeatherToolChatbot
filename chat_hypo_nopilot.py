@@ -173,42 +173,60 @@ OWM_API_KEY = os.getenv("OWM_API_KEY")
 # Streamlit page configuration
 st.set_page_config(page_title="Malaria Prompt Answering Assistant", page_icon="🦟", layout="wide")
 
-# Custom CSS for styling
+# Custom CSS for styling with red, black, and green color scheme
 st.markdown("""
 <style>
     .stApp {
-        background-color: #f0f4f8;
+        background-color: #000000;
+        color: #ffffff;
     }
     .main-header {
         font-size: 2.5rem;
-        color: #1e3a8a;
+        color: #ff0000;
         text-align: center;
         padding: 1rem 0;
         font-weight: bold;
     }
     .chat-container {
-        background-color: blue;
+        background-color: #1a1a1a;
         border-radius: 10px;
         padding: 20px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 4px 6px rgba(255, 0, 0, 0.1);
     }
     .human-message {
-        background-color: #e3f2fd;
+        background-color: #003300;
         padding: 10px;
         border-radius: 10px;
         margin: 5px 0;
+        border: 1px solid #00ff00;
     }
     .ai-message {
-        background-color: #f0f9ff;
+        background-color: #330000;
         padding: 10px;
         border-radius: 10px;
         margin: 5px 0;
+        border: 1px solid #ff0000;
     }
     .copyright {
         text-align: center;
         margin-top: 20px;
         font-size: 0.8rem;
-        color: #666;
+        color: #00ff00;
+    }
+    .stTextInput > div > div > input {
+        color: #ffffff;
+        background-color: #1a1a1a;
+        border: 1px solid #00ff00;
+    }
+    .stButton > button {
+        color: #000000;
+        background-color: #00ff00;
+        border: 1px solid #00ff00;
+    }
+    .stButton > button:hover {
+        color: #00ff00;
+        background-color: #000000;
+        border: 1px solid #00ff00;
     }
 </style>
 """, unsafe_allow_html=True)
