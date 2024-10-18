@@ -15,6 +15,8 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain.tools.retriever import create_retriever_tool
 from langchain_community.tools.tavily_search import TavilySearchResults
 import os
+from typing import Optional
+from langchain.tools import BaseTool
 
 # Securely fetch API keys from environment variables
 ACCESS_TOKEN = os.getenv("GITHUB_ACCESS_TOKEN")
