@@ -702,7 +702,7 @@ if "agent_executor" not in st.session_state:
 
 # Streamlit input for user message
 st.markdown("<div class='chat-container'>", unsafe_allow_html=True)
-user_input = st.text_input("You: ", "")
+user_input = st.text_input("Welcome to Geredi AI! I'm here to assist you with any questions or information related to malaria and weather: ", "")
 
 if st.button("Send"):
     if user_input:
