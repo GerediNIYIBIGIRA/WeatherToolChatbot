@@ -364,7 +364,6 @@
 # # Copyright notice
 # st.markdown("<p class='copyright'>© 2024 Developed and Managed by Geredi NIYIBIGIRA. All rights reserved.</p>", unsafe_allow_html=True)
 
-
 import os
 import streamlit as st
 from langchain_openai import ChatOpenAI
