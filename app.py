@@ -524,6 +524,122 @@
 #     port = int(os.environ.get("PORT", 10000))
 #     app.run(host='0.0.0.0', port=port)
 
+# import os
+# import chainlit as cl
+# from dotenv import load_dotenv
+# from flask import Flask
+# from langchain_openai import ChatOpenAI
+# from langchain.prompts import ChatPromptTemplate, MessagesPlaceholder
+# from langchain.agents.output_parsers.openai_tools import OpenAIToolsAgentOutputParser
+# from langchain.agents import AgentExecutor
+# from langchain.agents.format_scratchpad.openai_tools import format_to_openai_tool_messages
+# from langchain_core.messages import AIMessage, HumanMessage
+# from langchain_core.tools import tool
+# from pyowm import OWM
+
+# # Load environment variables
+# load_dotenv()
+
+# # Initialize the Flask app
+# app = Flask(__name__)
+
+# # Global variables
+# chat_history = []
+# country_name = None
+# city_name = None
+# results = None
+# results_obtained = False
+
+# # Weather tool
+# @tool("WeatherTool", return_direct=False)
+# def WeatherTool(country: str = None, city: str = None) -> str:
+#     global country_name, city_name, results, results_obtained
+
+#     owm_api_key = os.getenv("OWM_API_KEY")
+#     owm = OWM(owm_api_key)
+#     mgr = owm.weather_manager()
+
+#     if not city or not country:
+#         return "Error: Please provide both city and country for weather information."
+
+#     try:
+#         country_name = country
+#         city_name = city
+#         location = f"{city},{country}"
+#         observation = mgr.weather_at_place(location)
+#         w = observation.weather
+#         temperature = w.temperature('celsius')['temp']
+#         status = w.detailed_status
+#         results_obtained = True
+#         results = f"The weather in {country_name}, {city_name} is {status} with a temperature of {temperature}°C."
+#         return results
+#     except Exception as e:
+#         return f"Error retrieving weather information: {e}"
+
+# prompt = ChatPromptTemplate.from_messages([ 
+#     ("system", """
+#     You are the Malaria and Weather Prompt Assistant for Geredi Niyibigira. Follow these guidelines:
+#     1. Malaria-related questions: Use RAG content.
+#     2. Weather-related questions: Use WeatherTool.
+#     3. Unrelated questions: Guide users appropriately.
+#     """),
+#     MessagesPlaceholder(variable_name="chat_history"),
+#     ("user", "{input}"),
+#     MessagesPlaceholder(variable_name="agent_scratchpad"),
+# ])
+
+# @cl.on_chat_start
+# def setup_chain():
+#     openai_api_key = os.getenv("OPENAI_API_KEY")
+#     llm = ChatOpenAI(openai_api_key=openai_api_key, model="gpt-3.5-turbo")
+#     tools = [WeatherTool]
+#     llm_with_tools = llm.bind_tools(tools)
+
+#     agent = (
+#         {
+#             "input": lambda x: x["input"],
+#             "agent_scratchpad": lambda x: format_to_openai_tool_messages(x["intermediate_steps"]),
+#             "chat_history": lambda x: x["chat_history"]
+#         }
+#         | prompt
+#         | llm_with_tools
+#         | OpenAIToolsAgentOutputParser()
+#     )
+    
+#     agent_executor = AgentExecutor(agent=agent, tools=tools, verbose=True)
+#     cl.user_session.set("llm_chain", agent_executor)
+
+# @cl.on_message
+# async def handle_message(message: cl.Message):
+#     global country_name, city_name, results, results_obtained
+
+#     user_message = message.content.lower()
+#     llm_chain = cl.user_session.get("llm_chain")
+
+#     result = llm_chain.invoke({"input": user_message, "chat_history": chat_history})
+
+#     chat_history.extend([ 
+#         HumanMessage(content=user_message),
+#         AIMessage(content=result["output"]),
+#     ])
+
+#     if not results_obtained:
+#         await cl.Message(result["output"]).send()
+#     else:
+#         fn = cl.CopilotFunction(name="formfill", args={"fieldA": country_name, "fieldB": city_name, "fieldC": results})
+#         results_obtained = False
+#         await fn.acall()
+#         await cl.Message(content="Weather information has been added to the form.").send()
+
+# # Flask route for health check
+# @app.route('/')
+# def health_check():
+#     return "The app is running!"
+
+# if __name__ == "__main__":
+#     # Use 'gunicorn' to run the Flask app
+#     app.run(host='0.0.0.0', port=int(os.environ.get("PORT", 10000)))  # Default to 10000 for local development
+
 import os
 import chainlit as cl
 from dotenv import load_dotenv
@@ -534,7 +650,8 @@ from langchain.agents.output_parsers.openai_tools import OpenAIToolsAgentOutputP
 from langchain.agents import AgentExecutor
 from langchain.agents.format_scratchpad.openai_tools import format_to_openai_tool_messages
 from langchain_core.messages import AIMessage, HumanMessage
-from langchain_core.tools import tool
+from langchain_core.tools import StructuredTool
+from pydantic import BaseModel, Field
 from pyowm import OWM
 
 # Load environment variables
@@ -550,17 +667,18 @@ city_name = None
 results = None
 results_obtained = False
 
-# Weather tool
-@tool("WeatherTool", return_direct=False)
-def WeatherTool(country: str = None, city: str = None) -> str:
+# Weather tool input schema
+class WeatherInput(BaseModel):
+    country: str = Field(..., description="The country name")
+    city: str = Field(..., description="The city name")
+
+# Weather tool function
+def WeatherTool(country: str, city: str) -> str:
     global country_name, city_name, results, results_obtained
 
     owm_api_key = os.getenv("OWM_API_KEY")
     owm = OWM(owm_api_key)
     mgr = owm.weather_manager()
-
-    if not city or not country:
-        return "Error: Please provide both city and country for weather information."
 
     try:
         country_name = country
@@ -576,7 +694,16 @@ def WeatherTool(country: str = None, city: str = None) -> str:
     except Exception as e:
         return f"Error retrieving weather information: {e}"
 
-prompt = ChatPromptTemplate.from_messages([ 
+# Create StructuredTool for WeatherTool
+weather_tool = StructuredTool(
+    name="WeatherTool",
+    description="Get weather information for a specific city and country",
+    func=WeatherTool,
+    args_schema=WeatherInput,
+    return_direct=False
+)
+
+prompt = ChatPromptTemplate.from_messages([
     ("system", """
     You are the Malaria and Weather Prompt Assistant for Geredi Niyibigira. Follow these guidelines:
     1. Malaria-related questions: Use RAG content.
@@ -592,7 +719,7 @@ prompt = ChatPromptTemplate.from_messages([
 def setup_chain():
     openai_api_key = os.getenv("OPENAI_API_KEY")
     llm = ChatOpenAI(openai_api_key=openai_api_key, model="gpt-3.5-turbo")
-    tools = [WeatherTool]
+    tools = [weather_tool]
     llm_with_tools = llm.bind_tools(tools)
 
     agent = (
@@ -618,7 +745,7 @@ async def handle_message(message: cl.Message):
 
     result = llm_chain.invoke({"input": user_message, "chat_history": chat_history})
 
-    chat_history.extend([ 
+    chat_history.extend([
         HumanMessage(content=user_message),
         AIMessage(content=result["output"]),
     ])
