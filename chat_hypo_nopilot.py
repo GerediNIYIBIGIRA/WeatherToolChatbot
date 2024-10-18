@@ -157,7 +157,7 @@ from langchain_core.messages import AIMessage, HumanMessage
 from langchain_core.tools import tool
 from langchain.tools import BaseTool
 from pyowm import OWM
-from langchain.document_loaders import GithubFileLoader
+from langchain_community.document_loaders import GithubFileLoader
 from langchain_openai import OpenAIEmbeddings
 from langchain_community.vectorstores import FAISS
 from langchain_text_splitters import RecursiveCharacterTextSplitter
@@ -165,7 +165,6 @@ from langchain.tools.retriever import create_retriever_tool
 from langchain_community.tools.tavily_search import TavilySearchResults
 
 # Securely fetch API keys from environment variables
-# ACCESS_TOKEN = os.getenv("GITHUB_ACCESS_TOKEN")
 ACCESS_TOKEN = os.environ.get("GITHUB_PERSONAL_ACCESS_TOKEN")
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 TAVILY_API_KEY = os.getenv("TAVILY_API_KEY")
@@ -292,7 +291,12 @@ if st.button("Send"):
 
         # Display the conversation
         for message in chat_history:
-            st.markdown(f"**{message.role}:** {message.content}")
+            if isinstance(message, HumanMessage):
+                st.markdown(f"**Human:** {message.content}")
+            elif isinstance(message, AIMessage):
+                st.markdown(f"**AI:** {message.content}")
+            else:
+                st.markdown(f"**{type(message).__name__}:** {message.content}")
     else:
         st.warning("Please enter a message before sending.")
 
