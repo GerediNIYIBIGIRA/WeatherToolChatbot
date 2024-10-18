@@ -785,7 +785,15 @@ if "agent_executor" not in st.session_state:
 
 # Streamlit input for user message
 st.markdown("<div class='chat-container'>", unsafe_allow_html=True)
-user_input = st.text_input("Welcome to Geredi AI! I'm here to assist you with any questions or information related to malaria and weather: ", key="user_input")
+
+def clear_input():
+    st.session_state.user_input = ""
+
+user_input = st.text_input(
+    "Welcome to Geredi AI! I'm here to assist you with any questions or information related to malaria and weather: ",
+    key="user_input",
+    on_change=clear_input
+)
 
 if st.button("Send"):
     if user_input:
@@ -814,9 +822,6 @@ if st.button("Send"):
             placeholder.markdown(f"<div class='ai-message'><strong>Geredi AI:</strong> {full_response[:i+1]}</div>", unsafe_allow_html=True)
             time.sleep(0.01)
         placeholder.empty()
-
-        # Clear the user input field
-        st.session_state.user_input = ""
 
     else:
         st.warning("Please enter a message before sending.")
