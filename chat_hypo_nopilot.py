@@ -170,8 +170,51 @@ OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 TAVILY_API_KEY = os.getenv("TAVILY_API_KEY")
 OWM_API_KEY = os.getenv("OWM_API_KEY")
 
+# Streamlit page configuration
+st.set_page_config(page_title="Malaria Prompt Answering Assistant", page_icon="🦟", layout="wide")
+
+# Custom CSS for styling
+st.markdown("""
+<style>
+    .stApp {
+        background-color: #f0f4f8;
+    }
+    .main-header {
+        font-size: 2.5rem;
+        color: #1e3a8a;
+        text-align: center;
+        padding: 1rem 0;
+        font-weight: bold;
+    }
+    .chat-container {
+        background-color: white;
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    .human-message {
+        background-color: #e3f2fd;
+        padding: 10px;
+        border-radius: 10px;
+        margin: 5px 0;
+    }
+    .ai-message {
+        background-color: #f0f9ff;
+        padding: 10px;
+        border-radius: 10px;
+        margin: 5px 0;
+    }
+    .copyright {
+        text-align: center;
+        margin-top: 20px;
+        font-size: 0.8rem;
+        color: #666;
+    }
+</style>
+""", unsafe_allow_html=True)
+
 # Streamlit app title
-st.title("Malaria Prompt Answering Assistant")
+st.markdown("<h1 class='main-header'>Malaria Prompt Answering Assistant</h1>", unsafe_allow_html=True)
 
 # Load documents from GitHub
 loader = GithubFileLoader(
@@ -275,6 +318,7 @@ if "agent_executor" not in st.session_state:
     st.session_state.agent_executor = AgentExecutor(agent=agent, tools=tools, verbose=True)
 
 # Streamlit input for user message
+st.markdown("<div class='chat-container'>", unsafe_allow_html=True)
 user_input = st.text_input("You: ", "")
 
 if st.button("Send"):
@@ -292,13 +336,18 @@ if st.button("Send"):
         # Display the conversation
         for message in chat_history:
             if isinstance(message, HumanMessage):
-                st.markdown(f"**Human:** {message.content}")
+                st.markdown(f"<div class='human-message'><strong>Human:</strong> {message.content}</div>", unsafe_allow_html=True)
             elif isinstance(message, AIMessage):
-                st.markdown(f"**AI:** {message.content}")
+                st.markdown(f"<div class='ai-message'><strong>AI:</strong> {message.content}</div>", unsafe_allow_html=True)
             else:
-                st.markdown(f"**{type(message).__name__}:** {message.content}")
+                st.markdown(f"<div class='ai-message'><strong>{type(message).__name__}:</strong> {message.content}</div>", unsafe_allow_html=True)
     else:
         st.warning("Please enter a message before sending.")
+
+st.markdown("</div>", unsafe_allow_html=True)
+
+# Copyright notice
+st.markdown("<p class='copyright'>© 2024 Developed and Managed by Geredi NIYIBIGIRA. All rights reserved.</p>", unsafe_allow_html=True)
 
 
 # import os
