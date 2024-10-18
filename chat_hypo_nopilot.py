@@ -538,7 +538,7 @@ TAVILY_API_KEY = os.getenv("TAVILY_API_KEY")
 OWM_API_KEY = os.getenv("OWM_API_KEY")
 
 # Streamlit page configuration
-st.set_page_config(page_title="Malaria Prompt Answering Assistant", page_icon="🦟", layout="wide")
+st.set_page_config(page_title="Malaria and Weather Tool Assistant", page_icon="🦟", layout="wide")
 
 # Custom CSS for styling to match the logo's aesthetic
 st.markdown("""
@@ -721,7 +721,7 @@ if st.button("Send"):
             if isinstance(message, HumanMessage):
                 st.markdown(f"<div class='human-message'><strong>Human:</strong> {message.content}</div>", unsafe_allow_html=True)
             elif isinstance(message, AIMessage):
-                st.markdown(f"<div class='ai-message'><strong>AI:</strong> {message.content}</div>", unsafe_allow_html=True)
+                st.markdown(f"<div class='ai-message'><strong>Geredi AI:</strong> {message.content}</div>", unsafe_allow_html=True)
             else:
                 st.markdown(f"<div class='ai-message'><strong>{type(message).__name__}:</strong> {message.content}</div>", unsafe_allow_html=True)
     else:
