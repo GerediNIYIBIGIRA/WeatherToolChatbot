@@ -795,25 +795,22 @@ if st.button("Send"):
         # Display user message immediately
         st.markdown(f"<div class='human-message'><strong>Human:</strong> {user_input}</div>", unsafe_allow_html=True)
 
-        # Show loading indicator
-        with st.spinner("Geredi AI is thinking..."):
-            result = agent_executor.invoke({"input": user_input, "chat_history": chat_history})
+        # Generate response
+        result = agent_executor.invoke({"input": user_input, "chat_history": chat_history})
 
         # Update chat history
         chat_history.append(HumanMessage(content=user_input))
         chat_history.append(AIMessage(content=result["output"]))
         st.session_state.chat_history = chat_history
 
-        # Display AI response with animation
-        st.markdown(f"<div class='ai-message'><strong>Geredi AI:</strong> {result['output']}</div>", unsafe_allow_html=True)
-
-        # Simulate typing effect
-        placeholder = st.empty()
+        # Display AI response with typing effect
+        ai_response = st.empty()
         full_response = result["output"]
-        for i in range(len(full_response)):
-            placeholder.markdown(f"<div class='ai-message'><strong>Geredi AI:</strong> {full_response[:i+1]}</div>", unsafe_allow_html=True)
+        displayed_response = ""
+        for char in full_response:
+            displayed_response += char
+            ai_response.markdown(f"<div class='ai-message'><strong>Geredi AI:</strong> {displayed_response}</div>", unsafe_allow_html=True)
             time.sleep(0.01)
-        placeholder.empty()
 
     else:
         st.warning("Please enter a message before sending.")
