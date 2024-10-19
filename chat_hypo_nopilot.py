@@ -575,6 +575,7 @@
 
 ###################################################################################################################################################
 
+
 import os
 import streamlit as st
 from langchain_openai import ChatOpenAI
@@ -785,25 +786,18 @@ if "agent_executor" not in st.session_state:
 
 # Streamlit input for user message
 st.markdown("<div class='chat-container'>", unsafe_allow_html=True)
-
-# Display chat history
-for message in st.session_state.chat_history:
-    if isinstance(message, HumanMessage):
-        st.markdown(f"<div class='human-message'><strong>Human:</strong> {message.content}</div>", unsafe_allow_html=True)
-    elif isinstance(message, AIMessage):
-        st.markdown(f"<div class='ai-message'><strong>Geredi AI:</strong> {message.content}</div>", unsafe_allow_html=True)
-
-# Use a unique key for the text input
-user_input = st.text_input("Welcome to Geredi AI! I'm here to assist you with any questions or information related to malaria and weather: ", key="user_input_key")
+user_input = st.text_input("Welcome to Geredi AI! I'm here to assist you with any questions or information related to malaria and weather: ", "")
 
 if st.button("Send"):
     if user_input:
         agent_executor = st.session_state.agent_executor
         chat_history = st.session_state.chat_history
 
-        # Show loading indicator
-        with st.spinner("Geredi AI is thinking..."):
-            result = agent_executor.invoke({"input": user_input, "chat_history": chat_history})
+        # Display user message immediately
+        st.markdown(f"<div class='human-message'><strong>Human:</strong> {user_input}</div>", unsafe_allow_html=True)
+
+        # Generate response
+        result = agent_executor.invoke({"input": user_input, "chat_history": chat_history})
 
         # Update chat history
         chat_history.append(HumanMessage(content=user_input))
@@ -819,21 +813,10 @@ if st.button("Send"):
             ai_response.markdown(f"<div class='ai-message'><strong>Geredi AI:</strong> {displayed_response}</div>", unsafe_allow_html=True)
             time.sleep(0.01)
 
-        # Clear the input field by resetting the session state
-        st.session_state.user_input_key = ""
-
-        # Rerun the app to refresh the UI
-        st.rerun()
-
     else:
         st.warning("Please enter a message before sending.")
 
 st.markdown("</div>", unsafe_allow_html=True)
-
-# Button to clear chat history
-if st.button("Clear Chat History"):
-    st.session_state.chat_history = []
-    st.rerun()
 
 # Feedback form
 st.markdown("<div class='feedback-form'>", unsafe_allow_html=True)
@@ -847,7 +830,5 @@ st.markdown("</div>", unsafe_allow_html=True)
 
 # Copyright notice
 st.markdown("<p class='copyright'>© 2024 Developed and Managed by Geredi NIYIBIGIRA. All rights reserved.</p>", unsafe_allow_html=True)
-
-
 
 
