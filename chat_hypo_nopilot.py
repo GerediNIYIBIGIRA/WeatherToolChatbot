@@ -793,15 +793,12 @@ for message in st.session_state.chat_history:
     elif isinstance(message, AIMessage):
         st.markdown(f"<div class='ai-message'><strong>Geredi AI:</strong> {message.content}</div>", unsafe_allow_html=True)
 
-user_input = st.text_input("Welcome to Geredi AI! I'm here to assist you with any questions or information related to malaria and weather: ", "")
+user_input = st.text_input("Welcome to Geredi AI! I'm here to assist you with any questions or information related to malaria and weather: ", key="user_input")
 
 if st.button("Send"):
     if user_input:
         agent_executor = st.session_state.agent_executor
         chat_history = st.session_state.chat_history
-
-        # Display user message immediately
-        st.markdown(f"<div class='human-message'><strong>Human:</strong> {user_input}</div>", unsafe_allow_html=True)
 
         # Show loading indicator
         with st.spinner("Geredi AI is thinking..."):
@@ -822,7 +819,7 @@ if st.button("Send"):
             time.sleep(0.01)
 
         # Clear the input field
-        st.experimental_rerun()
+        st.session_state.user_input = ""
 
     else:
         st.warning("Please enter a message before sending.")
@@ -832,7 +829,7 @@ st.markdown("</div>", unsafe_allow_html=True)
 # Button to clear chat history
 if st.button("Clear Chat History"):
     st.session_state.chat_history = []
-    st.experimental_rerun()
+    st.rerun()
 
 # Feedback form
 st.markdown("<div class='feedback-form'>", unsafe_allow_html=True)
