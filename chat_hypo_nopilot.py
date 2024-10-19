@@ -679,6 +679,19 @@ st.markdown("""
     .stChatMessage.assistant {
         background-color: #d4d4d4;
     }
+    .main-content {
+        min-height: calc(100vh - 100px);
+        padding-bottom: 100px;
+    }
+    .footer {
+        position: fixed;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        background-color: #f0f0f0;
+        padding: 10px 0;
+        text-align: center;
+    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -796,52 +809,52 @@ if "agent_executor" not in st.session_state:
     
     st.session_state.agent_executor = AgentExecutor(agent=agent, tools=tools, verbose=True)
 
-# Display chat history
-for message in st.session_state.messages:
-    with st.chat_message(message["role"]):
-        st.markdown(message["content"])
+# Create a container for the main content
+main_content = st.container()
 
-# Chat input
-if prompt := st.chat_input("Ask me anything about malaria or weather:"):
-    st.session_state.messages.append({"role": "user", "content": prompt})
-    with st.chat_message("user"):
-        st.markdown(prompt)
+# Create a container for the footer (feedback form and copyright)
+footer = st.container()
 
-    with st.chat_message("assistant"):
-        message_placeholder = st.empty()
-        full_response = ""
-        response = st.session_state.agent_executor.invoke(
-            {"input": prompt, "chat_history": st.session_state.chat_history}
-        )
-        full_response = response.get('output', '')
-        message_placeholder.markdown(full_response)
-    st.session_state.messages.append({"role": "assistant", "content": full_response})
-    st.session_state.chat_history.append(HumanMessage(content=prompt))
-    st.session_state.chat_history.append(AIMessage(content=full_response))
+# Main content
+with main_content:
+    # Display chat history
+    for message in st.session_state.messages:
+        with st.chat_message(message["role"]):
+            st.markdown(message["content"])
 
-# # Feedback form
-# st.markdown("<div class='feedback-form'>", unsafe_allow_html=True)
-# st.subheader("Feedback")
-# feedback = st.text_area("Please provide your feedback on the assistant:")
-# rating = st.slider("Rate your experience (1-5):", 1, 5, 3)
-# if st.button("Submit Feedback"):
-#     # Here you would typically save this feedback to a database or file
-#     st.success("Thank you for your feedback!")
-# st.markdown("</div>", unsafe_allow_html=True)
+    # Chat input
+    if prompt := st.chat_input("Ask me anything about malaria or weather:"):
+        st.session_state.messages.append({"role": "user", "content": prompt})
+        with st.chat_message("user"):
+            st.markdown(prompt)
 
-# # Copyright notice
-# st.markdown("<p class='copyright'>© 2024 Developed and Managed by Geredi NIYIBIGIRA. All rights reserved.</p>", unsafe_allow_html=True)
+        with st.chat_message("assistant"):
+            message_placeholder = st.empty()
+            full_response = ""
+            response = st.session_state.agent_executor.invoke(
+                {"input": prompt, "chat_history": st.session_state.chat_history}
+            )
+            full_response = response.get('output', '')
+            message_placeholder.markdown(full_response)
+        st.session_state.messages.append({"role": "assistant", "content": full_response})
+        st.session_state.chat_history.append(HumanMessage(content=prompt))
+        st.session_state.chat_history.append(AIMessage(content=full_response))
 
-# Feedback form
-st.markdown("<div class='feedback-form'>", unsafe_allow_html=True)
-st.subheader("Feedback")
-feedback = st.text_area("Please provide your feedback on the assistant:")
-rating = st.slider("Rate your experience (1-5):", 1, 5, 3)
-if st.button("Submit Feedback"):
-    # Here you would typically save this feedback to a database or file
-    st.success("Thank you for your feedback!")
-st.markdown("</div>", unsafe_allow_html=True)
+# Footer content
+with footer:
+    st.markdown("<div class='footer'>", unsafe_allow_html=True)
+    
+    # Feedback form
+    st.subheader("Feedback")
+    feedback = st.text_area("Please provide your feedback on the assistant:")
+    rating = st.slider("Rate your experience (1-5):", 1, 5, 3)
+    if st.button("Submit Feedback"):
+        # Here you would typically save this feedback to a database or file
+        st.success("Thank you for your feedback!")
+    
+    # Copyright notice
+    st.markdown("<p class='copyright'>© 2024 Developed and Managed by Geredi NIYIBIGIRA. All rights reserved.</p>", unsafe_allow_html=True)
+    
+    st.markdown("</div>", unsafe_allow_html=True)
 
-# Copyright notice
-st.markdown("<p class='copyright'>© 2024 Developed and Managed by Geredi NIYIBIGIRA. All rights reserved.</p>", unsafe_allow_html=True)
 
