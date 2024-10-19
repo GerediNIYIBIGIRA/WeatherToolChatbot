@@ -1339,7 +1339,16 @@ if submit and user_input:
         response = st.session_state.agent_executor({"input": user_input, "chat_history": st.session_state.chat_history})
     
     # Add the AI's response to the chat history
-    st.session_state.chat_history.append(AIMessage(content=response))
+    # st.session_state.chat_history.append(AIMessage(content=response))
+    # Ensure response is a string before appending
+if isinstance(response, dict):
+    response_content = response.get("output", str(response))  # Adjust the key to match the response structure
+else:
+    response_content = str(response)
+
+st.session_state.chat_history.append(AIMessage(content=response_content))
+
+    
 
 # Display the chat history
 for i, message in enumerate(st.session_state.chat_history):
