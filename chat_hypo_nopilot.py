@@ -575,6 +575,7 @@
 
 ###################################################################################################################################################
 
+
 import os
 import streamlit as st
 from langchain_openai import ChatOpenAI
@@ -680,8 +681,20 @@ st.markdown("""
         background-color: #d4d4d4;
     }
     .main-content {
-        min-height: calc(100vh - 100px);
-        padding-bottom: 100px;
+        display: flex;
+        flex-direction: column;
+        height: calc(100vh - 200px);
+    }
+    .chat-discussion {
+        flex-grow: 1;
+        overflow-y: auto;
+        padding: 20px;
+        background-color: #f7f7f7;
+        border-radius: 10px;
+        margin-bottom: 20px;
+    }
+    .chat-input {
+        margin-bottom: 20px;
     }
     .footer {
         position: fixed;
@@ -809,38 +822,41 @@ if "agent_executor" not in st.session_state:
     
     st.session_state.agent_executor = AgentExecutor(agent=agent, tools=tools, verbose=True)
 
-# Create a container for the main content
+# Main content area
 main_content = st.container()
 
-# Create a container for the footer (feedback form and copyright)
-footer = st.container()
-
-# Main content
 with main_content:
+    # Chat discussion area
+    chat_discussion = st.container()
+    
     # Display chat history
-    for message in st.session_state.messages:
-        with st.chat_message(message["role"]):
-            st.markdown(message["content"])
+    with chat_discussion:
+        for message in st.session_state.messages:
+            with st.chat_message(message["role"]):
+                st.markdown(message["content"])
 
     # Chat input
-    if prompt := st.chat_input("Ask me anything about malaria or weather:"):
-        st.session_state.messages.append({"role": "user", "content": prompt})
-        with st.chat_message("user"):
-            st.markdown(prompt)
+    chat_input = st.container()
+    with chat_input:
+        if prompt := st.chat_input("Ask me anything about malaria or weather:"):
+            st.session_state.messages.append({"role": "user", "content": prompt})
+            with st.chat_message("user"):
+                st.markdown(prompt)
 
-        with st.chat_message("assistant"):
-            message_placeholder = st.empty()
-            full_response = ""
-            response = st.session_state.agent_executor.invoke(
-                {"input": prompt, "chat_history": st.session_state.chat_history}
-            )
-            full_response = response.get('output', '')
-            message_placeholder.markdown(full_response)
-        st.session_state.messages.append({"role": "assistant", "content": full_response})
-        st.session_state.chat_history.append(HumanMessage(content=prompt))
-        st.session_state.chat_history.append(AIMessage(content=full_response))
+            with st.chat_message("assistant"):
+                message_placeholder = st.empty()
+                full_response = ""
+                response = st.session_state.agent_executor.invoke(
+                    {"input": prompt, "chat_history": st.session_state.chat_history}
+                )
+                full_response = response.get('output', '')
+                message_placeholder.markdown(full_response)
+            st.session_state.messages.append({"role": "assistant", "content": full_response})
+            st.session_state.chat_history.append(HumanMessage(content=prompt))
+            st.session_state.chat_history.append(AIMessage(content=full_response))
 
 # Footer content
+footer = st.container()
 with footer:
     st.markdown("<div class='footer'>", unsafe_allow_html=True)
     
@@ -856,5 +872,4 @@ with footer:
     st.markdown("<p class='copyright'>© 2024 Developed and Managed by Geredi NIYIBIGIRA. All rights reserved.</p>", unsafe_allow_html=True)
     
     st.markdown("</div>", unsafe_allow_html=True)
-
 
