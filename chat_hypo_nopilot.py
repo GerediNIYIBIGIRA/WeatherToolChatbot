@@ -885,7 +885,7 @@ OWM_API_KEY = os.getenv("OWM_API_KEY")
 # Streamlit page configuration
 st.set_page_config(page_title="Geredi AI Malaria and Weather Tool Assistant", page_icon="🦟", layout="wide")
 
-# Custom CSS for styling to match the logo's aesthetic
+# Custom CSS for styling
 st.markdown("""
 <style>
     .stApp {
@@ -949,6 +949,42 @@ st.markdown("""
         padding: 15px;
         background-color: #f0f0f0;
         border-radius: 10px;
+    }
+    .stChatMessage {
+        padding: 10px;
+        border-radius: 10px;
+        margin-bottom: 10px;
+    }
+    .stChatMessage.user {
+        background-color: #e0e0e0;
+    }
+    .stChatMessage.assistant {
+        background-color: #d4d4d4;
+    }
+    .main-content {
+        display: flex;
+        flex-direction: column;
+        height: calc(100vh - 200px);
+    }
+    .chat-discussion {
+        flex-grow: 1;
+        overflow-y: auto;
+        padding: 20px;
+        background-color: #f7f7f7;
+        border-radius: 10px;
+        margin-bottom: 20px;
+    }
+    .chat-input {
+        margin-bottom: 20px;
+    }
+    .footer {
+        position: fixed;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        background-color: #f0f0f0;
+        padding: 10px 0;
+        text-align: center;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -1045,9 +1081,11 @@ prompt = ChatPromptTemplate.from_messages([
     MessagesPlaceholder(variable_name="agent_scratchpad"),
 ])
 
-# Initialize session state to store chat history and agent executor
+# Initialize session state to store chat history, messages, and agent executor
 if "chat_history" not in st.session_state:
     st.session_state.chat_history = []
+if "messages" not in st.session_state:
+    st.session_state.messages = []
 if "agent_executor" not in st.session_state:
     llm = ChatOpenAI(openai_api_key=OPENAI_API_KEY, model="gpt-3.5-turbo")
     llm_with_tools = llm.bind_tools(tools)
@@ -1065,51 +1103,60 @@ if "agent_executor" not in st.session_state:
     
     st.session_state.agent_executor = AgentExecutor(agent=agent, tools=tools, verbose=True)
 
-# Streamlit input for user message
-st.markdown("<div class='chat-container'>", unsafe_allow_html=True)
-user_input = st.text_input("Welcome to Geredi AI! I'm here to assist you with any questions or information related to malaria and weather: ", "")
+# Main content area
+main_content = st.container()
 
-if st.button("Send"):
-    if user_input:
-        agent_executor = st.session_state.agent_executor
-        chat_history = st.session_state.chat_history
+with main_content:
+    # Chat discussion area
+    chat_discussion = st.container()
+    
+    # Display chat history
+    with chat_discussion:
+        for message in st.session_state.messages:
+            with st.chat_message(message["role"]):
+                st.markdown(message["content"])
 
-        # Display user message immediately
-        st.markdown(f"<div class='human-message'><strong>Human:</strong> {user_input}</div>", unsafe_allow_html=True)
+    # Chat input
+    chat_input = st.container()
+    with chat_input:
+        if prompt := st.chat_input("Ask me anything about malaria or weather:"):
+            st.session_state.messages.append({"role": "user", "content": prompt})
+            with st.chat_message("user"):
+                st.markdown(prompt)
 
-        # Generate response
-        result = agent_executor.invoke({"input": user_input, "chat_history": chat_history})
+            with st.chat_message("assistant"):
+                message_placeholder = st.empty()
+                full_response = ""
+                try:
+                    response = st.session_state.agent_executor.invoke(
+                        {"input": prompt, "chat_history": st.session_state.chat_history}
+                    )
+                    full_response = response.get('output', '')
+                    if not full_response:
+                        full_response = "I'm sorry, I couldn't generate a response. Please try asking your question again."
+                except Exception as e:
+                    full_response = f"An error occurred: {str(e)}"
+                message_placeholder.markdown(full_response)
+            st.session_state.messages.append({"role": "assistant", "content": full_response})
+            st.session_state.chat_history.append(HumanMessage(content=prompt))
+            st.session_state.chat_history.append(AIMessage(content=full_response))
 
-        # Update chat history
-        chat_history.append(HumanMessage(content=user_input))
-        chat_history.append(AIMessage(content=result["output"]))
-        st.session_state.chat_history = chat_history
-
-        # Display AI response with typing effect
-        ai_response = st.empty()
-        full_response = result["output"]
-        displayed_response = ""
-        for char in full_response:
-            displayed_response += char
-            ai_response.markdown(f"<div class='ai-message'><strong>Geredi AI:</strong> {displayed_response}</div>", unsafe_allow_html=True)
-            time.sleep(0.01)
-
-    else:
-        st.warning("Please enter a message before sending.")
-
-st.markdown("</div>", unsafe_allow_html=True)
-
-# Feedback form
-st.markdown("<div class='feedback-form'>", unsafe_allow_html=True)
-st.subheader("Feedback")
-feedback = st.text_area("Please provide your feedback on the assistant:")
-rating = st.slider("Rate your experience (1-5):", 1, 5, 3)
-if st.button("Submit Feedback"):
-    # Here you would typically save this feedback to a database or file
-    st.success("Thank you for your feedback!")
-st.markdown("</div>", unsafe_allow_html=True)
-
-# Copyright notice
-st.markdown("<p class='copyright'>© 2024 Developed and Managed by Geredi NIYIBIGIRA. All rights reserved.</p>", unsafe_allow_html=True)
+# Footer content
+footer = st.container()
+with footer:
+    st.markdown("<div class='footer'>", unsafe_allow_html=True)
+    
+    # Feedback form
+    st.subheader("Feedback")
+    feedback = st.text_area("Please provide your feedback on the assistant:")
+    rating = st.slider("Rate your experience (1-5):", 1, 5, 3)
+    if st.button("Submit Feedback"):
+        # Here you would typically save this feedback to a database or file
+        st.success("Thank you for your feedback!")
+    
+    # Copyright notice
+    st.markdown("<p class='copyright'>© 2024 Developed and Managed by Geredi NIYIBIGIRA. All rights reserved.</p>", unsafe_allow_html=True)
+    
+    st.markdown("</div>", unsafe_allow_html=True)
 
 
