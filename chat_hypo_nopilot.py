@@ -604,7 +604,7 @@ OWM_API_KEY = os.getenv("OWM_API_KEY")
 # Streamlit page configuration
 st.set_page_config(page_title="Geredi AI Malaria and Weather Tool Assistant", page_icon="🦟", layout="wide")
 
-# Custom CSS for styling to match the logo's aesthetic
+# Custom CSS for styling
 st.markdown("""
 <style>
     .stApp {
@@ -668,6 +668,17 @@ st.markdown("""
         padding: 15px;
         background-color: #f0f0f0;
         border-radius: 10px;
+    }
+    .stChatMessage {
+        padding: 10px;
+        border-radius: 10px;
+        margin-bottom: 10px;
+    }
+    .stChatMessage.user {
+        background-color: #e0e0e0;
+    }
+    .stChatMessage.assistant {
+        background-color: #d4d4d4;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -764,9 +775,11 @@ prompt = ChatPromptTemplate.from_messages([
     MessagesPlaceholder(variable_name="agent_scratchpad"),
 ])
 
-# Initialize session state to store chat history and agent executor
+# Initialize session state to store chat history, messages, and agent executor
 if "chat_history" not in st.session_state:
     st.session_state.chat_history = []
+if "messages" not in st.session_state:
+    st.session_state.messages = []
 if "agent_executor" not in st.session_state:
     llm = ChatOpenAI(openai_api_key=OPENAI_API_KEY, model="gpt-3.5-turbo")
     llm_with_tools = llm.bind_tools(tools)
@@ -784,39 +797,29 @@ if "agent_executor" not in st.session_state:
     
     st.session_state.agent_executor = AgentExecutor(agent=agent, tools=tools, verbose=True)
 
-# Streamlit input for user message
-st.markdown("<div class='chat-container'>", unsafe_allow_html=True)
-user_input = st.text_input("Welcome to Geredi AI! I'm here to assist you with any questions or information related to malaria and weather: ", "")
+# Display chat history
+for message in st.session_state.messages:
+    with st.chat_message(message["role"]):
+        st.markdown(message["content"])
 
-if st.button("Send"):
-    if user_input:
-        agent_executor = st.session_state.agent_executor
-        chat_history = st.session_state.chat_history
+# Chat input
+if prompt := st.chat_input("Ask me anything about malaria or weather:"):
+    st.session_state.messages.append({"role": "user", "content": prompt})
+    with st.chat_message("user"):
+        st.markdown(prompt)
 
-        # Display user message immediately
-        st.markdown(f"<div class='human-message'><strong>Human:</strong> {user_input}</div>", unsafe_allow_html=True)
-
-        # Generate response
-        result = agent_executor.invoke({"input": user_input, "chat_history": chat_history})
-
-        # Update chat history
-        chat_history.append(HumanMessage(content=user_input))
-        chat_history.append(AIMessage(content=result["output"]))
-        st.session_state.chat_history = chat_history
-
-        # Display AI response with typing effect
-        ai_response = st.empty()
-        full_response = result["output"]
-        displayed_response = ""
-        for char in full_response:
-            displayed_response += char
-            ai_response.markdown(f"<div class='ai-message'><strong>Geredi AI:</strong> {displayed_response}</div>", unsafe_allow_html=True)
-            time.sleep(0.01)
-
-    else:
-        st.warning("Please enter a message before sending.")
-
-st.markdown("</div>", unsafe_allow_html=True)
+    with st.chat_message("assistant"):
+        message_placeholder = st.empty()
+        full_response = ""
+        for response in st.session_state.agent_executor.invoke(
+            {"input": prompt, "chat_history": st.session_state.chat_history}
+        ):
+            full_response += response["output"]
+            message_placeholder.markdown(full_response + "▌")
+        message_placeholder.markdown(full_response)
+    st.session_state.messages.append({"role": "assistant", "content": full_response})
+    st.session_state.chat_history.append(HumanMessage(content=prompt))
+    st.session_state.chat_history.append(AIMessage(content=full_response))
 
 # Feedback form
 st.markdown("<div class='feedback-form'>", unsafe_allow_html=True)
