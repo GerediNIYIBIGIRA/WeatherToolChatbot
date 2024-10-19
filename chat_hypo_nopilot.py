@@ -811,16 +811,27 @@ if prompt := st.chat_input("Ask me anything about malaria or weather:"):
     with st.chat_message("assistant"):
         message_placeholder = st.empty()
         full_response = ""
-        for response in st.session_state.agent_executor.invoke(
-            {"input": prompt, "chat_history": st.session_state.chat_history}
-        ):
-            full_response += response["output"]
-            message_placeholder.markdown(full_response + "▌")
-        message_placeholder.markdown(full_response)
-    st.session_state.messages.append({"role": "assistant", "content": full_response})
-    st.session_state.chat_history.append(HumanMessage(content=prompt))
-    st.session_state.chat_history.append(AIMessage(content=full_response))
-
+        try:
+            for response in st.session_state.agent_executor.invoke(
+                {"input": prompt, "chat_history": st.session_state.chat_history}
+            ):
+                if isinstance(response, dict) and "output" in response:
+                    full_response += response["output"]
+                elif isinstance(response, str):
+                    full_response += response
+                else:
+                    st.error(f"Unexpected response format: {response}")
+                message_placeholder.markdown(full_response + "▌")
+                time.sleep(0.01)
+        except Exception as e:
+            st.error(f"An error occurred: {str(e)}")
+        finally:
+            message_placeholder.markdown(full_response)
+    
+    if full_response:
+        st.session_state.messages.append({"role": "assistant", "content": full_response})
+        st.session_state.chat_history.append(HumanMessage(content=prompt))
+        st.session_state.chat_history.append(AIMessage(content=full_response))
 # Feedback form
 st.markdown("<div class='feedback-form'>", unsafe_allow_html=True)
 st.subheader("Feedback")
