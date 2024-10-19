@@ -1036,8 +1036,8 @@ prompt = ChatPromptTemplate.from_messages([
    If the provided city or country is incorrect or does not exist, prompt the user to provide valid information.
    If the user provides only a city name, please ask the user to also provide the country name for accurate weather information.
 3. Unrelated Queries (e.g., Sports, Music, etc.):
-   For any queries unrelated to malaria or weather (such as sports, music, etc.), employ external tools like the tavily_search tool to fetch relevant links and resources.
-   Clearly guide the user on where they can find appropriate information for these topics.
+   For any queries unrelated to malaria or weather (such as sports, music, etc.), employ external tools like the tavily_search tool to fetch relevant links and resources, please focusing on provinding relevant links where the user can find the additional information.
+   Clearly guide the user on where they can find appropriate information for these topics by provinding him there relevant links and ressources.
    Remember to respond in a friendly, engaging manner while ensuring accuracy and relevance in your answers.
     """),
     MessagesPlaceholder(variable_name="chat_history"),
