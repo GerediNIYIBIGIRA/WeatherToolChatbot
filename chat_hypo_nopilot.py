@@ -785,6 +785,14 @@ if "agent_executor" not in st.session_state:
 
 # Streamlit input for user message
 st.markdown("<div class='chat-container'>", unsafe_allow_html=True)
+
+# Display chat history
+for message in st.session_state.chat_history:
+    if isinstance(message, HumanMessage):
+        st.markdown(f"<div class='human-message'><strong>Human:</strong> {message.content}</div>", unsafe_allow_html=True)
+    elif isinstance(message, AIMessage):
+        st.markdown(f"<div class='ai-message'><strong>Geredi AI:</strong> {message.content}</div>", unsafe_allow_html=True)
+
 user_input = st.text_input("Welcome to Geredi AI! I'm here to assist you with any questions or information related to malaria and weather: ", "")
 
 if st.button("Send"):
@@ -795,8 +803,9 @@ if st.button("Send"):
         # Display user message immediately
         st.markdown(f"<div class='human-message'><strong>Human:</strong> {user_input}</div>", unsafe_allow_html=True)
 
-        # Generate response
-        result = agent_executor.invoke({"input": user_input, "chat_history": chat_history})
+        # Show loading indicator
+        with st.spinner("Geredi AI is thinking..."):
+            result = agent_executor.invoke({"input": user_input, "chat_history": chat_history})
 
         # Update chat history
         chat_history.append(HumanMessage(content=user_input))
@@ -812,10 +821,18 @@ if st.button("Send"):
             ai_response.markdown(f"<div class='ai-message'><strong>Geredi AI:</strong> {displayed_response}</div>", unsafe_allow_html=True)
             time.sleep(0.01)
 
+        # Clear the input field
+        st.experimental_rerun()
+
     else:
         st.warning("Please enter a message before sending.")
 
 st.markdown("</div>", unsafe_allow_html=True)
+
+# Button to clear chat history
+if st.button("Clear Chat History"):
+    st.session_state.chat_history = []
+    st.experimental_rerun()
 
 # Feedback form
 st.markdown("<div class='feedback-form'>", unsafe_allow_html=True)
