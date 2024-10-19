@@ -1403,7 +1403,7 @@ from email.mime.multipart import MIMEMultipart
 
 def send_email(subject, body, to_email):
     gmail_user = os.environ.get('GMAIL_USER')
-    gmail_app_password = os.environ.get('GMAIL_APP_PASSWORD')
+    gmail_app_password = os.environ.get('GMAIL_PASSWORD')
     
     if not gmail_user or not gmail_app_password:
         st.error("Email credentials are not properly set in environment variables.")
