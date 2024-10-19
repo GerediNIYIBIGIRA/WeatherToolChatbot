@@ -756,7 +756,7 @@ tools = [retriever_tool, search, weather_tool]
 
 prompt = ChatPromptTemplate.from_messages([
     ("system", """
-    You are the Malaria Prompt Answering Assistant developed by Geredi Niyibigira if someone or user a question who developed you or who manage you please answer him/her that you have developed and managed by Geredi Niyibigira a graduated student in MS in Engineering Artificial Intelligence at Carnegie Mellon University Africa. Your primary goal is to help users find accurate answers to any questions related to malaria. Please follow these guidelines based on the type of query:
+    You are the Malaria Prompt Answering Assistant developed by Geredi Niyibigira. If someone or user asks a question about who developed you or who manages you, please answer them that you have been developed and managed by Geredi Niyibigira, a graduate student in MS in Engineering Artificial Intelligence at Carnegie Mellon University Africa. Your primary goal is to help users find accurate answers to any questions related to malaria. Please follow these guidelines based on the type of query:
 
 1. Malaria-Related Queries:
    For all questions related to malaria, utilize your pre-trained knowledge along with the Retrieval-Augmented Generation (RAG) content to provide accurate, thoughtful, and evidence-based responses.
@@ -794,43 +794,42 @@ if "agent_executor" not in st.session_state:
         | llm_with_tools
         | OpenAIToolsAgentOutputParser()
     )
-    
-    st.session_state.agent_executor = AgentExecutor(agent=agent, tools=tools, verbose=True)
 
-# Display chat history
-for message in st.session_state.messages:
-    with st.chat_message(message["role"]):
-        st.markdown(message["content"])
+    st.session_state.agent_executor = AgentExecutor(agent=agent, return_intermediate_steps=True)
 
-# Chat input
-if prompt := st.chat_input("Ask me anything about malaria or weather:"):
-    st.session_state.messages.append({"role": "user", "content": prompt})
-    with st.chat_message("user"):
-        st.markdown(prompt)
+# Create a text input box for user prompt
+with st.form(key='my_form', clear_on_submit=True):
+    user_input = st.text_input("Ask your question about malaria or weather:", "")
+    submit_button = st.form_submit_button(label='Submit')
 
-    with st.chat_message("assistant"):
-        message_placeholder = st.empty()
-        full_response = ""
-        for response in st.session_state.agent_executor.invoke(
-            {"input": prompt, "chat_history": st.session_state.chat_history}
-        ):
-            full_response += response["output"]
-            message_placeholder.markdown(full_response + "▌")
-        message_placeholder.markdown(full_response)
-    st.session_state.messages.append({"role": "assistant", "content": full_response})
-    st.session_state.chat_history.append(HumanMessage(content=prompt))
-    st.session_state.chat_history.append(AIMessage(content=full_response))
+# Handle user input
+if submit_button and user_input:
+    # Update chat history with user input
+    st.session_state.chat_history.append(HumanMessage(content=user_input))
+    full_response = ""
 
-# Feedback form
-st.markdown("<div class='feedback-form'>", unsafe_allow_html=True)
-st.subheader("Feedback")
-feedback = st.text_area("Please provide your feedback on the assistant:")
-rating = st.slider("Rate your experience (1-5):", 1, 5, 3)
-if st.button("Submit Feedback"):
-    # Here you would typically save this feedback to a database or file
-    st.success("Thank you for your feedback!")
-st.markdown("</div>", unsafe_allow_html=True)
+    # Invoke agent executor with user input and chat history
+    responses = st.session_state.agent_executor.invoke({
+        "input": user_input,
+        "chat_history": st.session_state.chat_history
+    })
 
-# Copyright notice
-st.markdown("<p class='copyright'>© 2024 Developed and Managed by Geredi NIYIBIGIRA. All rights reserved.</p>", unsafe_allow_html=True)
+    # Check response types and build full response
+    for response in responses:
+        print(response)  # Debugging line to see the response
+        if isinstance(response, dict):
+            full_response += response.get("output", "")  # Safely access output
+        elif isinstance(response, str):
+            full_response += response  # Handle string response
+
+    # Display the full response in the chat
+    message_placeholder = st.empty()
+    message_placeholder.markdown(full_response + "▌")
+
+    # Store the response in chat history
+    st.session_state.messages.append(AIMessage(content=full_response))
+
+# Footer for copyright notice
+st.markdown("<div class='copyright'>© 2024 Geredi Niyibigira</div>", unsafe_allow_html=True)
+
 
