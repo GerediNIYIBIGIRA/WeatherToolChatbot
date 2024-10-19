@@ -875,12 +875,44 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain.tools.retriever import create_retriever_tool
 from langchain_community.tools.tavily_search import TavilySearchResults
 import time
+import os
+import streamlit as st
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+
 
 # Securely fetch API keys from environment variables
 ACCESS_TOKEN = os.environ.get("GITHUB_PERSONAL_ACCESS_TOKEN")
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 TAVILY_API_KEY = os.getenv("TAVILY_API_KEY")
 OWM_API_KEY = os.getenv("OWM_API_KEY")
+GMAIL_USER = "ngeredi@andrew.cmu.edu"  # Replace with your email
+SENDER_PASSWORD = os.getenv("GMAIL_PASSWORD")
+# Add this function to send emails
+def send_email(subject, body, to_email):
+    # Use environment variables for email credentials
+    gmail_user = os.environ.get('GMAIL_USER')
+    gmail_password = os.environ.get('GMAIL_PASSWORD')
+    
+    msg = MIMEMultipart()
+    msg['From'] = gmail_user
+    msg['To'] = to_email
+    msg['Subject'] = subject
+    
+    msg.attach(MIMEText(body, 'plain'))
+    
+    try:
+        server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
+        server.ehlo()
+        server.login(gmail_user, gmail_password)
+        server.sendmail(gmail_user, to_email, msg.as_string())
+        server.close()
+        return True
+    except Exception as e:
+        st.error(f"Failed to send email: {str(e)}")
+        return False
+
 
 # Streamlit page configuration
 st.set_page_config(page_title="Geredi AI Malaria and Weather Tool Assistant", page_icon="🦟", layout="wide")
@@ -1099,28 +1131,28 @@ if st.button("Send"):
     else:
         st.warning("Please enter a message before sending.")
 
-st.markdown("</div>", unsafe_allow_html=True)
 
-st.markdown("""
-<div class="feedback-form">
-    <h3>We value your feedback!</h3>
-    <p>How satisfied are you with the response provided by Geredi AI? Your feedback helps us improve the service!</p>
-    <form action="#" method="post">
-        <input type="radio" id="very-satisfied" name="feedback" value="very-satisfied">
-        <label for="very-satisfied">Very Satisfied</label><br>
-        <input type="radio" id="satisfied" name="feedback" value="satisfied">
-        <label for="satisfied">Satisfied</label><br>
-        <input type="radio" id="neutral" name="feedback" value="neutral">
-        <label for="neutral">Neutral</label><br>
-        <input type="radio" id="dissatisfied" name="feedback" value="dissatisfied">
-        <label for="dissatisfied">Dissatisfied</label><br>
-        <input type="radio" id="very-dissatisfied" name="feedback" value="very-dissatisfied">
-        <label for="very-dissatisfied">Very Dissatisfied</label><br><br>
-        <textarea name="comments" rows="4" cols="50" placeholder="Additional comments"></textarea><br><br>
-        <input type="submit" value="Submit">
-    </form>
-</div>
-""", unsafe_allow_html=True)
+# st.markdown("</div>", unsafe_allow_html=True)
+
+# Replace the existing feedback form with this Streamlit form
+st.markdown("<h3>We value your feedback!</h3>", unsafe_allow_html=True)
+st.markdown("<p>How satisfied are you with the response provided by Geredi AI? Your feedback helps us improve the service!</p>", unsafe_allow_html=True)
+
+with st.form("feedback_form"):
+    satisfaction = st.radio(
+        "Satisfaction level:",
+        ("Very Satisfied", "Satisfied", "Neutral", "Dissatisfied", "Very Dissatisfied")
+    )
+    comments = st.text_area("Additional comments:")
+    submitted = st.form_submit_button("Submit")
+
+    if submitted:
+        feedback_text = f"Satisfaction: {satisfaction}\nComments: {comments}"
+        if send_email("Geredi AI Feedback", feedback_text, "ngeredi@andrew.cmu.edu"):
+            st.success("Thank you for your feedback!")
+        else:
+            st.error("Failed to submit feedback. Please try again later.")
+
 
 # Copyright notice
 st.markdown("<p class='copyright'>© 2024 Developed and Managed by Geredi NIYIBIGIRA. All rights reserved.</p>", unsafe_allow_html=True)
