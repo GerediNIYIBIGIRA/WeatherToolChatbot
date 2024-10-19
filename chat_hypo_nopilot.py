@@ -793,7 +793,8 @@ for message in st.session_state.chat_history:
     elif isinstance(message, AIMessage):
         st.markdown(f"<div class='ai-message'><strong>Geredi AI:</strong> {message.content}</div>", unsafe_allow_html=True)
 
-user_input = st.text_input("Welcome to Geredi AI! I'm here to assist you with any questions or information related to malaria and weather: ", key="user_input")
+# Use a unique key for the text input
+user_input = st.text_input("Welcome to Geredi AI! I'm here to assist you with any questions or information related to malaria and weather: ", key="user_input_key")
 
 if st.button("Send"):
     if user_input:
@@ -818,8 +819,11 @@ if st.button("Send"):
             ai_response.markdown(f"<div class='ai-message'><strong>Geredi AI:</strong> {displayed_response}</div>", unsafe_allow_html=True)
             time.sleep(0.01)
 
-        # Clear the input field
-        st.session_state.user_input = ""
+        # Clear the input field by resetting the session state
+        st.session_state.user_input_key = ""
+
+        # Rerun the app to refresh the UI
+        st.rerun()
 
     else:
         st.warning("Please enter a message before sending.")
