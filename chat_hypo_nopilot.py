@@ -1396,10 +1396,21 @@ if st.button("Send"):
 
 st.markdown("</div>", unsafe_allow_html=True)
 
-# Function to send email
+import os
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+
 def send_email(subject, body, to_email):
+    gmail_user = os.environ.get('GMAIL_USER')
+    gmail_app_password = os.environ.get('GMAIL_APP_PASSWORD')
+    
+    if not gmail_user or not gmail_app_password:
+        st.error("Email credentials are not properly set in environment variables.")
+        return False
+    
     msg = MIMEMultipart()
-    msg['From'] = GMAIL_USER
+    msg['From'] = gmail_user
     msg['To'] = to_email
     msg['Subject'] = subject
     
@@ -1408,8 +1419,9 @@ def send_email(subject, body, to_email):
     try:
         server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
         server.ehlo()
-        server.login(GMAIL_USER, GMAIL_APP_PASSWORD)
-        server.sendmail(GMAIL_USER, to_email, msg.as_string())
+        server.login(gmail_user, gmail_app_password)
+        text = msg.as_string()
+        server.sendmail(gmail_user, to_email, text)
         server.close()
         return True
     except Exception as e:
