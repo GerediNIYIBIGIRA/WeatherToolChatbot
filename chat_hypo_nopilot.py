@@ -575,7 +575,6 @@
 
 ###################################################################################################################################################
 
-
 import os
 import streamlit as st
 from langchain_openai import ChatOpenAI
@@ -820,15 +819,15 @@ if prompt := st.chat_input("Ask me anything about malaria or weather:"):
     st.session_state.chat_history.append(HumanMessage(content=prompt))
     st.session_state.chat_history.append(AIMessage(content=full_response))
 
-# # Feedback form
-# st.markdown("<div class='feedback-form'>", unsafe_allow_html=True)
-# st.subheader("Feedback")
-# feedback = st.text_area("Please provide your feedback on the assistant:")
-# rating = st.slider("Rate your experience (1-5):", 1, 5, 3)
-# if st.button("Submit Feedback"):
-#     # Here you would typically save this feedback to a database or file
-#     st.success("Thank you for your feedback!")
-# st.markdown("</div>", unsafe_allow_html=True)
+# Feedback form
+st.markdown("<div class='feedback-form'>", unsafe_allow_html=True)
+st.subheader("Feedback")
+feedback = st.text_area("Please provide your feedback on the assistant:")
+rating = st.slider("Rate your experience (1-5):", 1, 5, 3)
+if st.button("Submit Feedback"):
+    # Here you would typically save this feedback to a database or file
+    st.success("Thank you for your feedback!")
+st.markdown("</div>", unsafe_allow_html=True)
 
 # Copyright notice
 st.markdown("<p class='copyright'>© 2024 Developed and Managed by Geredi NIYIBIGIRA. All rights reserved.</p>", unsafe_allow_html=True)
