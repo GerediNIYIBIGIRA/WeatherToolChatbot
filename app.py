@@ -801,32 +801,92 @@ st.set_page_config(page_title="Education & Awareness Chatbot", page_icon="ðŸ‘©â€
 # Custom CSS for improved aesthetics
 st.markdown("""
 <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+    
+    body {
+        font-family: 'Poppins', sans-serif;
+        background-color: #f0f2f5;
+        color: #333;
+    }
     .stApp {
-        background-color: #f8f9fa;
-        color: #343a40;
+        max-width: 1200px;
+        margin: 0 auto;
     }
     .main-header {
-        font-size: 2.5rem;
-        color: #343a40;
+        font-size: 2rem;
+        color: #1a237e;
         text-align: center;
         padding: 1rem 0;
-        font-weight: bold;
-        font-family: 'Arial', sans-serif;
+        font-weight: 600;
     }
     .chat-container {
+        display: flex;
         background-color: #ffffff;
         border-radius: 10px;
-        padding: 20px;
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    .topics-sidebar {
+        flex: 0 0 250px;
+        padding: 20px;
+        background-color: #f8f9fa;
+        border-right: 1px solid #e0e0e0;
+    }
+    .topic-item {
+        cursor: pointer;
+        padding: 8px 12px;
+        margin-bottom: 8px;
+        border-radius: 4px;
+        transition: background-color 0.3s;
+    }
+    .topic-item:hover {
+        background-color: #e0e0e0;
+    }
+    .chat-main {
+        flex: 1;
+        padding: 20px;
     }
     .human-message, .ai-message {
         padding: 10px;
         border-radius: 10px;
         margin: 5px 0;
-        font-size: 1.1rem;
+        font-size: 1rem;
     }
-    .human-message { background-color: #e0e0e0; }
-    .ai-message { background-color: #d4f0f4; }
+    .human-message { 
+        background-color: #e3f2fd;
+        align-self: flex-end;
+    }
+    .ai-message { 
+        background-color: #f3e5f5;
+        align-self: flex-start;
+    }
+    .language-selector {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 20px;
+    }
+    .lang-btn {
+        margin: 0 5px;
+        padding: 5px 10px;
+        border: none;
+        background-color: #e0e0e0;
+        cursor: pointer;
+        border-radius: 4px;
+    }
+    .lang-btn:hover {
+        background-color: #bdbdbd;
+    }
+    .feedback-section {
+        margin-top: 20px;
+        padding: 20px;
+        background-color: #f5f5f5;
+        border-radius: 10px;
+    }
+    .copyright {
+        text-align: center;
+        font-size: 0.8rem;
+        margin-top: 20px;
+        color: #757575;
+    }
 </style>
 """, unsafe_allow_html=True)
 
