@@ -931,7 +931,7 @@ if st.button("Send"):
         st.markdown(f"<div class='human-message'><strong>User:</strong> {user_input}</div>", unsafe_allow_html=True)
 
         # Generate response
-        with st.spinner("Geredi AI is thinking..."):
+        with st.spinner("Migeprof AI is thinking..."):
             result = agent_executor.invoke({"input": user_input, "chat_history": chat_history})
 
         # Update chat history
