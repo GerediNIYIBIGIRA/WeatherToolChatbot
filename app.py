@@ -945,5 +945,58 @@ if st.button("Send"):
         st.warning("Please enter a message before sending.")
 
 st.markdown("</div>", unsafe_allow_html=True)
+import os
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+
+def send_email(subject, body, to_email):
+    gmail_user = os.environ.get('GMAIL_USER')
+    gmail_app_password = os.environ.get('GMAIL_PASSWORD')
+    
+    if not gmail_user or not gmail_app_password:
+        st.error("Email credentials are not properly set in environment variables.")
+        return False
+    
+    msg = MIMEMultipart()
+    msg['From'] = gmail_user
+    msg['To'] = to_email
+    msg['Subject'] = subject
+    
+    msg.attach(MIMEText(body, 'plain'))
+    
+    try:
+        server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
+        server.ehlo()
+        server.login(gmail_user, gmail_app_password)
+        text = msg.as_string()
+        server.sendmail(gmail_user, to_email, text)
+        server.close()
+        return True
+    except Exception as e:
+        st.error(f"Failed to send email: {str(e)}")
+        return False
+
+# Feedback form
+st.markdown("<h3>We value your feedback!</h3>", unsafe_allow_html=True)
+st.markdown("<p>How satisfied are you with the response provided by Geredi AI? Your feedback helps us improve the service!</p>", unsafe_allow_html=True)
+
+with st.form("feedback_form"):
+    satisfaction = st.radio(
+        "Satisfaction level:",
+        ("Very Satisfied", "Satisfied", "Neutral", "Dissatisfied", "Very Dissatisfied")
+    )
+    comments = st.text_area("Additional comments:")
+    submitted = st.form_submit_button("Submit")
+
+    if submitted:
+        feedback_text = f"Satisfaction: {satisfaction}\nComments: {comments}"
+        if send_email("Geredi AI Feedback", feedback_text, "ngeredi@andrew.cmu.edu"):
+            st.success("Thank you for your feedback! It has been sent successfully.")
+        else:
+            st.error("Failed to submit feedback. Please try again later.")
+
+# Copyright notice
+st.markdown("<p class='copyright'>© 2024 Developed and Managed by Geredi NIYIBIGIRA. All rights reserved.</p>", unsafe_allow_html=True)
 
 
